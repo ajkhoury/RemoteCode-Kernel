@@ -1,0 +1,98 @@
+#pragma once
+
+#include <ntifs.h>
+
+#define dbgprint(format, ...)		DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, format, __VA_ARGS__)
+
+#define PARAM_POOL_TAG				'araP'
+
+typedef enum _PARAMETER_TYPE
+{
+	PARAM_TYPE_LONG = 0,
+	PARAM_TYPE_LONG64,
+	PARAM_TYPE_BOOL,
+	PARAM_TYPE_SHORT,
+	PARAM_TYPE_FLOAT,
+	PARAM_TYPE_DOUBLE,
+	PARAM_TYPE_BYTE,
+	PARAM_TYPE_POINTER,
+	PARAM_TYPE_STRING,
+	PARAM_TYPE_WSTRING,
+	PARAM_TYPE_UNICODE_STRING
+} PARAMETER_TYPE, *PPARAMETER_TYPE;
+
+typedef enum _PARAMETER_INDEX
+{
+	PARAM_INDEX_RCX,
+	PARAM_INDEX_RDX,
+	PARAM_INDEX_R8,
+	PARAM_INDEX_R9,
+	PARAM_INDEX_MAX
+} PARAMETER_INDEX, *PPARAMETER_INDEX;
+
+#pragma warning (disable : 4201)
+typedef struct _PARAMETER_INFO
+{
+	PARAMETER_TYPE			Type;
+	union
+	{
+		struct
+		{
+			LONG Param32;
+			LONG HighBits;
+		} DUMMYUNIONNAME;
+		LONGLONG Param64;
+	};
+} PARAMETER_INFO, *PPARAMETER_INFO;
+#pragma warning (default : 4201)
+
+typedef enum _CALLING_CONVENTION
+{
+	CCONV_CDECL = 0,
+	CCONV_STDCALL,
+	CCONV_THISCALL,
+	CCONV_FASTCALL,
+	CCONV_WIN64 = CCONV_FASTCALL
+} CALLING_CONVENTION, *PCALLING_CONVENTION;
+
+typedef struct _CODE_BUFFER
+{
+	PUCHAR Code; // Should be allocated before hand
+	ULONG CurrentIndex;
+	SIZE_T Size;
+	PPARAMETER_INFO Params[13]; // Max params is 13
+	ULONG ParamCount;
+	BOOLEAN Is64Bit;
+	BOOLEAN LoopCall;
+} CODE_BUFFER, *PCODE_BUFFER;
+
+LONG JumpShort( IN PCODE_BUFFER Buffer, IN LONG Jump );
+LONG Parameter( IN PCODE_BUFFER Buffer, IN PPARAMETER_INFO Param );
+LONG Call( IN PCODE_BUFFER Buffer, IN PVOID CallAddress );
+
+VOID LoopCall( IN PCODE_BUFFER Buffer );
+VOID PushParameter( IN PCODE_BUFFER Buffer, IN PPARAMETER_INFO Param );
+VOID PushPointer( IN PCODE_BUFFER Buffer, IN PVOID Ptr );
+VOID PushLong( IN PCODE_BUFFER Buffer, IN LONG Long);
+VOID PushLong64( IN PCODE_BUFFER Buffer, IN LONGLONG Long64 );
+VOID PushULong( IN PCODE_BUFFER Buffer, IN ULONG ULong );
+VOID PushULong64( IN PCODE_BUFFER Buffer, IN ULONGLONG ULong64 );
+VOID PushByte( IN PCODE_BUFFER Buffer, IN UCHAR Byte );
+VOID PushBool( IN PCODE_BUFFER Buffer, IN BOOLEAN Bool );
+VOID PushUnicodeString( IN PCODE_BUFFER Buffer, IN PUNICODE_STRING UStr );
+VOID PushUnicodeString32( IN PCODE_BUFFER Buffer, IN PUNICODE_STRING32 UStr );
+LONG PushCall( IN PCODE_BUFFER Buffer, IN CALLING_CONVENTION cconv, IN PVOID CallAddress );
+
+LONG AddByteToBuffer( IN PCODE_BUFFER Buffer, IN UCHAR Byte );
+LONG AddLongToBuffer( IN PCODE_BUFFER Buffer, IN LONG Long );
+LONG AddLong64ToBuffer( IN PCODE_BUFFER Buffer, IN LONG64 Long64 );
+LONG AddULongToBuffer( IN PCODE_BUFFER Buffer, IN ULONG ULong );
+LONG AddULong64ToBuffer( IN PCODE_BUFFER Buffer, IN ULONG64 ULong64 );
+LONG AddPointerToBuffer( IN PCODE_BUFFER Buffer, IN PVOID Ptr );
+
+LONG BeginCall32( IN PCODE_BUFFER Buffer );
+LONG EndCall32( IN PCODE_BUFFER Buffer, IN LONG RetSize );
+
+LONG BeginCall64( IN PCODE_BUFFER Buffer );
+LONG EndCall64( IN PCODE_BUFFER Buffer );
+
