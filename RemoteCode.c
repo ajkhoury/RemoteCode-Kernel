@@ -344,7 +344,7 @@ LONG PushAllParameters( IN PCODE_BUFFER Buffer, IN BOOLEAN right_to_left )
 				size += Parameter( Buffer, Param );
 
 				FreeParameter( Param );
-				Buffer->Params[i - 1] = NULL;
+				Buffer->Params[i] = NULL;
 
 				Buffer->ParamCount += 1;
 			}
