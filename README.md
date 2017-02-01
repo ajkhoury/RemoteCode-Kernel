@@ -1,6 +1,6 @@
 # RemoteCode-Kernel 
 
-This is a small, minimalistic code generation library developed in C, intended for kernel code generation. Great for manual mapping or creating a metamorphic engine in kernel mode.
+This is a small, minimalistic code generation library developed in C, intended for kernel mode code generation. Great for manual mapping or creating a metamorphic engine in kernel mode.
 
 ## License
 
