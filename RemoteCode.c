@@ -1,3 +1,5 @@
+// Copy right Jim McAgree (A5), Sammy Delain (MrEpicGoat)
+
 #include "RemoteCode.h"
 
 #pragma warning(disable : 4311 4302)
