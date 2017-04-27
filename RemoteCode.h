@@ -1,3 +1,5 @@
+// Copy right Jim McAgree (A5), Sammy Delain (MrEpicGoat)
+
 #pragma once
 
 #include <ntifs.h>

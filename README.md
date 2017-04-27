@@ -4,7 +4,7 @@ This is a small, minimalistic code generation library developed in C, intended f
 
 ## License
 
-Copyright (C) 2016 Aidan Khoury (dude719), s0beit
+Copyright (C) 2016 Jim McAgree (A5), MrEpicGoat, s0beit
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
