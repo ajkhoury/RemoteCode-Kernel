@@ -50,16 +50,15 @@ VOID LoopCall( IN PCODE_BUFFER Buffer )
 {
 	Buffer->LoopCall = TRUE;
 }
-
 LONG JumpShort( IN PCODE_BUFFER Buffer, IN LONG Jump )
 {
-	LONG size = 0;
-	size += AddByteToBuffer( Buffer, 0xEB );
-	if (Jump < 2)
-		size += AddByteToBuffer( Buffer, (UCHAR)(0xFE + Jump) );
-	else
-		size += AddByteToBuffer( Buffer, (UCHAR)(Jump - 0x02) );
-	return size;
+    LONG size = 0;
+    size += AddByteToBuffer( Buffer, 0xEB );
+    if (Jump <= 2)
+        size += AddByteToBuffer( Buffer, (UCHAR)(0xFE + Jump) );
+    else
+        size += AddByteToBuffer( Buffer, (UCHAR)(Jump - 0x02) );
+    return size;
 }
 
 LONG Call( IN PCODE_BUFFER Buffer, IN PVOID CallAddress )
